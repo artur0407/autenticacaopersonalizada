@@ -11,15 +11,19 @@
                         @csrf
 
                         <div class="mb-3">
-                            <label for="username" class="form-label">Usuário</label>
-                            <input type="text" class="form-control" id="username" name="username">
-                            {{-- <div class="text-danger">[mensagem de erro]</div> --}}
+                            <label for="name" class="form-label">Usuário</label>
+                            <input type="text" class="form-control" id="name" name="name">
+                            @error('name')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="password" class="form-label">Senha</label>
                             <input type="password" class="form-control" id="password" name="password">
-                            {{-- <div class="text-danger">[mensagem de erro]</div> --}}
+                            @error('password')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="row mt-4">
@@ -38,10 +42,11 @@
 
                     </form>
 
-                    {{-- <div class="alert alert-danger text-center mt-3">
-                        [mensagem de erro]
-                    </div> --}}
-
+                    @if(session('invalid_login'))
+                        <div class="alert alert-danger text-center mt-3">
+                           {{ session('invalid_login') }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

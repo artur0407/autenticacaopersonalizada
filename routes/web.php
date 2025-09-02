@@ -11,8 +11,8 @@ Route::middleware('guest')->group(function() {
 });
 
 // usuários logados
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function() {
     Route::get('/', function() {
         echo 'Olá Mundo!';
     });
-});
+})->name('home');
