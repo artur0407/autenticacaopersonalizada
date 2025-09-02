@@ -12,12 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('token', 100)->nullable()->after('password');
-            $table->dateTime('email_verified_at')->nullable()->after('token')->default(null);
-            $table->dateTime('last_login_at')->nullable()->after('email_verified_at')->default(null);
+            $table->dateTime('last_login_at')->nullable()->after('remember_token')->default(null);
             $table->boolean('active')->default(true)->after('last_login_at')->default(null);
             $table->dateTime('blocked_until')->nullable()->after('active')->default(null);
-            $table->softDeletes()->after('blocked_until'); // cria a coluna deleted_at
+            $table->softDeletes()->after('updated_at'); // cria a coluna deleted_at
         });
     }
 
@@ -28,8 +26,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn([
-                'token',
-                'email_verified_at',
                 'last_login_at',
                 'active',
                 'blocked_until',
