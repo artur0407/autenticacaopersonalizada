@@ -12,7 +12,7 @@
 
                         <div class="mb-3">
                             <label for="name" class="form-label">Usuário</label>
-                            <input type="text" class="form-control" id="name" name="name">
+                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
                             @error('name')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -28,9 +28,10 @@
 
                         <div class="row mt-4">
                             <div class="col">
-                                {{-- <div class="mb-3">
-                                    <a href="#">Não tenho conta de usuário</a>
+                                <div class="mb-3">
+                                    <a href="{{ route('register') }}">Não tenho conta de usuário</a>
                                 </div>
+                                {{-- 
                                 <div>
                                     <a href="#">Esqueci a minha senha</a>
                                 </div> --}}

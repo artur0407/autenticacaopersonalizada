@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
-use function Laravel\Prompts\password;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -16,7 +16,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function authenticate(Request $request)
+    public function authenticate(Request $request): RedirectResponse
     {
         // validacao do form
         $credentials = $request->validate(
@@ -77,5 +77,54 @@ class AuthController extends Controller
 
         // redirecionar para a página que usuário estava tentando acessar ou a home se a rota não existir
         return redirect()->intended(route('home'));
+    }
+
+    public function logout()
+    {
+        // logout
+        Auth::logout();
+        return redirect()->route('login');
+    }
+
+    public function register(): View
+    {
+        return view('auth.register');
+    }
+
+    public function storeUser(Request $request): void
+    {
+        // form validation
+        $request->validate(
+            [
+                'name' => 'required|min:3|max:30|unique:users,name',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|min:8|max:32|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+                'password_confirmation' => 'required|same:password'
+            ],
+            [
+                'name.required' => 'O usuário é obrigatório' ,
+                'name.min' => 'O usuário deve ter no mínimo :min caracteres',
+                'name.max' => 'O usuário deve ter no maximo :max caracteres',
+                'name.unique' => 'Este nome não pode ser usado',
+                'email.required' => 'O email é obrigatório' ,
+                'email.email' => 'O email deve ser um endereço de email válido',
+                'email.unique' => 'Este email não pode ser usado',
+                'password.required' => 'A senha é obrigatória',
+                'password.min' => 'A senha deve ter no mínimo :min caracteres',
+                'password.max' => 'A senha deve ter no maximo :max caracteres',
+                'password.regex' => 'A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula e um número',
+                'password_confirmation.required' => 'A confirmação de senha é obrigatória' ,
+                'password_confirmation.same' => 'A confirmação da senha deve ser igual à senha' ,
+            ]
+        );
+
+        // criação de novo usuário definindo token de verificação de email
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->token = Str::random(64);
+
+        dd($user);
     }
 }
