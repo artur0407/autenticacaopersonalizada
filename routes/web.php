@@ -14,6 +14,9 @@ Route::middleware('guest')->group(function() {
     // registration routes
     Route::get('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/register', [AuthController::class, 'storeUser'])->name('storeUser');
+
+    // new user confirmation
+    Route::get('/new_user_confirmation/{token}', [AuthController::class, 'newUserConfirmation'])->name('newUserConfirmation');
 });
 
 // usuários logados
