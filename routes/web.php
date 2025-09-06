@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -21,9 +22,14 @@ Route::middleware('guest')->group(function() {
 
 // usuários logados
 Route::middleware('auth')->group(function() {
-    Route::get('/', function() {
-        echo 'Olá Mundo!';
-    })->name('home');
 
+    // rota de entrada
+    Route::get('/', [MainController::class, 'home'])->name('home');
+
+    // profile - change password
+    Route::get('/profile',[AuthController::class, 'profile'])->name('profile');
+    Route::post('/profile',[AuthController::class, 'change_password'])->name('change_password');
+
+    // desautenticar
     Route::get('/logout',[AuthController::class, 'logout'])->name('logout');
 });
