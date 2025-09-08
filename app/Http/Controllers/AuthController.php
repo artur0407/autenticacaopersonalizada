@@ -322,4 +322,34 @@ class AuthController extends Controller
             'success' => true
         ]);
     }
+
+    public function delete_account(Request $request)
+    {
+        // validação do form
+        $request->validate(
+            [
+                'delete_confirmation' => 'required|in:ELIMINAR'
+            ],
+            [
+                'delete_confirmation.required' => 'A confirmação é obrigatória',
+                'delete_confirmation.in' => 'É obrigatório escrever a palavra ELIMINAR'
+            ]
+        );
+
+        // remover a conta de usuário (hard delete ou soft delete)
+
+        // soft delete
+        $user = Auth::user();
+        $user->delete();
+
+        // hard delete
+        // $user = Auth::user();
+        // $user->forceDelete();
+
+        // logout
+        Auth::logout();
+
+        // redirect para login
+        return redirect()->route('login')->with(['account_deleted' => true]);
+    }
 }
